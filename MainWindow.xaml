@@ -1,0 +1,72 @@
+﻿<Window x:Class="JoshsTestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JoshsTestApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1000">
+    <Window.Resources>
+        <Style x:Key="RoundedBorder" TargetType="Button">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+    <Grid Background="Gray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.ColumnSpan="3">
+            <Grid.Background>
+                <ImageBrush ImageSource="Images/DiamondPlateMetal.jpg" Stretch="UniformToFill"/>
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Button Grid.RowSpan="2" Grid.Column="1" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Bluetooth Device" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Left Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
+            <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
+            <TextBlock Grid.Row="0" Grid.Column="2" TextAlignment="Right" Foreground="White" HorizontalAlignment="Right" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Right Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
+            <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
+        </Grid>
+        <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ConnectedDevices}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DeviceName}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <MediaElement Grid.Row="1" Grid.Column="1">
+            
+        </MediaElement>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="3">
+            <Grid.Background>
+                <ImageBrush ImageSource="Images/DiamondPlateMetal.jpg" Stretch="UniformToFill"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Right" Content="FIRE" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Margin="80 0"/>
+            <local:Joystick Grid.Row="1" x:Name="Joystick1" HorizontalAlignment="Left" Margin="80 0 80 40"/>
+            <local:Joystick Grid.Row="1" x:Name="Joystick2" HorizontalAlignment="Right" Margin="80 0 80 40"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,42 @@
+﻿<Window x:Class="JoshsTestApp.AvailableBTDeviceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:qc="http://QuickConverter.CodePlex.com/"
+        xmlns:local="clr-namespace:JoshsTestApp"
+        mc:Ignorable="d"
+        Title="AvailableBTDeviceWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="80" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Find A Bluetooth Connection">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" FontSize="10" Margin="10 0" VerticalAlignment="Bottom" Text="Please make sure the device is in pairing mode to pair to the Photo-TANK Remote"/>
+                <Button Grid.Row="1" Command="{Binding GetDevicesCommand}" Content="Get Devices" Height="20" Width="80" HorizontalAlignment="Left" Margin="10 0"/>
+                <Button Grid.Row="1" Command="{Binding ConnectToDeviceCommand}" Content="Connect to Device" Height="20" Width="110" HorizontalAlignment="Left" Margin="100 0 10 0" IsEnabled="{qc:Binding '$P != null', P={Binding SelectedDevice}}"/>
+                <!--REMOVE WHEN NOT NEEDED--><TextBlock HorizontalAlignment="Left" Margin="661,0,0,0" TextWrapping="Wrap" Text="{Binding SelectedDevice.DeviceName}" VerticalAlignment="Center"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Available Bluetooth Devices" >
+            <ListView ItemsSource="{Binding BluetoothDevices}" SelectedItem="{Binding SelectedDevice}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Device Name" Width="Auto" DisplayMemberBinding="{Binding DeviceName}" />
+                        <GridViewColumn Header="Authenticated" Width="Auto" DisplayMemberBinding="{Binding IsAuthenticated}"/>
+                        <GridViewColumn Header="Remembered" Width="Auto" DisplayMemberBinding="{Binding IsRemembered}" />
+                        <GridViewColumn Header="Connected" Width="Auto" DisplayMemberBinding="{Binding IsConnected}" />
+                        <GridViewColumn Header="Last Seen" Width="Auto" DisplayMemberBinding="{Binding LastSeen}" />
+                        <GridViewColumn Header="Last Used" Width="Auto" DisplayMemberBinding="{Binding LastUsed}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </GroupBox>
+    </Grid>
+</Window>
