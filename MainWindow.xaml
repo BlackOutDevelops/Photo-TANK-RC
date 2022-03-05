@@ -4,17 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JoshsTestApp"
-        mc:Ignorable="d"
+		mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1000">
     <Window.Resources>
-        <Style x:Key="RoundedBorder" TargetType="Button">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="15"/>
-                </Style>
-            </Style.Resources>
-        </Style>
-    </Window.Resources>
+		<Style x:Key="RoundedBorder" TargetType="Button">
+			<Style.Resources>
+				<Style TargetType="Border">
+					<Setter Property="CornerRadius" Value="15"/>
+				</Style>
+			</Style.Resources>
+		</Style>
+	</Window.Resources>
     <Grid Background="Gray">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -33,28 +33,43 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Button Grid.RowSpan="2" Grid.Column="1" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Bluetooth Device" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler"/>
+            <Button Grid.RowSpan="2" Grid.Column="1" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Bluetooth Device" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler_BluetoothDevices"/>
+			<Button Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Jetson Nano Hotspot" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler_JetsonConnection"/>
             <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Left Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
-            <TextBlock Grid.Row="0" Grid.Column="2" TextAlignment="Right" Foreground="White" HorizontalAlignment="Right" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Right Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
-            <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
+            <TextBlock Grid.Row="0" Grid.Column="3" TextAlignment="Right" Foreground="White" HorizontalAlignment="Right" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Right Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
+            <TextBlock Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
         </Grid>
-        <ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ConnectedDevices}">
+		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ConnectedDevices}" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsHitTestVisible="False">
+			<ListView.Background>
+				<ImageBrush ImageSource="Images/Metal.jpg" Stretch="UniformToFill"/>
+			</ListView.Background>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding DeviceName}"/>
-                </DataTemplate>
+					<TextBox Text="{Binding DeviceName}" VerticalAlignment="Center" Foreground="Black" FontWeight="ExtraBold" FontSize="20" TextAlignment="Center" Background="Transparent" BorderBrush="Transparent" IsHitTestVisible="False"/>
+				</DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <MediaElement Grid.Row="1" Grid.Column="1">
-            
-        </MediaElement>
+		<WebBrowser Grid.Row="1" Grid.Column="1" Source="https://www.youtube-nocookie.com/embed/21X5lGlDOfg">
+
+		</WebBrowser>
+		<Rectangle Grid.Row="1" Grid.Column="2" Stroke="Black" StrokeThickness="2" RenderTransformOrigin="0.5, 0.5">
+			<Rectangle.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform ScaleX="-1"/>
+				</TransformGroup>
+			</Rectangle.RenderTransform>
+			<Rectangle.Fill>
+				<ImageBrush ImageSource="Images/Metal.jpg" Stretch="UniformToFill"  />
+			</Rectangle.Fill>
+		</Rectangle>
 
         <Grid Grid.Row="2" Grid.ColumnSpan="3">
             <Grid.Background>

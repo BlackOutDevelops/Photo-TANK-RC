@@ -43,7 +43,7 @@ namespace JoshsTestApp
             return await task;
         }
 
-        public async Task<BluetoothClient> ConnectDevice(Device pendingDevice)
+        public async Task<BluetoothEndPoint> ConnectDevice(Device pendingDevice)
         {
             var task = Task.Run(() =>
             {
@@ -54,12 +54,12 @@ namespace JoshsTestApp
                         BluetoothEndPoint endpoint = new BluetoothEndPoint(pendingDevice.DeviceInfo.DeviceAddress, BluetoothService.PhonebookAccess);
                         
                         client.ConnectAsync(endpoint);
+                        System.Diagnostics.Debug.WriteLine("Connected Sucessfully");
                         while (client.Connected)
                         {
                             
-
                         }
-                        return client;
+                        return endpoint;
                     }
                     catch (Exception ex)
                     {

@@ -1,4 +1,5 @@
-﻿using InTheHand.Net.Sockets;
+﻿using InTheHand.Net;
+using InTheHand.Net.Sockets;
 using JoshTestApp;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,64 @@ using System.Windows.Input;
 namespace JoshsTestApp
 {
     class AvailableBTDeviceViewModel : BaseViewModel
-    {  
+    {
+        public SenderBluetoothService SenderService = new SenderBluetoothService();
+
+        private Task<ObservableCollection<Device>> _bluetoothDevicesTasks;
+        public Task<ObservableCollection<Device>> BluetoothDevicesTasks
+        {
+            get { return _bluetoothDevicesTasks; }
+            set
+            {
+                if (value != _bluetoothDevicesTasks)
+                {
+                    _bluetoothDevicesTasks = value;
+                    FirePropertyChanged(nameof(BluetoothDevicesTasks));
+                }
+            }
+        }
+
+        private Device _selectedDevice;
+        public Device SelectedDevice
+        {
+            get { return _selectedDevice; }
+            set
+            {
+                if (value != _selectedDevice)
+                {
+                    _selectedDevice = value;
+                    FirePropertyChanged(nameof(SelectedDevice));
+                }
+            }
+        }
+
+        private ObservableCollection<Device> _bluetoothDevices;
+        public ObservableCollection<Device> BluetoothDevices
+        {
+            get { return _bluetoothDevices; }
+            set
+            {
+                if (value != _bluetoothDevices)
+                {
+                    _bluetoothDevices = value;
+                    FirePropertyChanged(nameof(BluetoothDevices));
+                }
+            }
+        }
+
+        private ObservableCollection<Device> _connectedDevices;
+		public ObservableCollection<Device> ConnectedDevices
+        {
+            get { return _connectedDevices; }
+            set
+            {
+                if (value != _connectedDevices)
+                {
+                    _connectedDevices = value;
+                    FirePropertyChanged(nameof(ConnectedDevices));
+                }
+            }
+        }
         public AvailableBTDeviceViewModel()
         {
             ConnectedDevices = new ObservableCollection<Device>();
@@ -38,16 +96,13 @@ namespace JoshsTestApp
 
         private async void ConnectDevice()
         {
-            BluetoothClient client = await Task.Run(() => SenderService.ConnectDevice(SelectedDevice));
-            if (client.Connected)
+            if (ConnectedDevices != null && !ConnectedDevices.Contains(SelectedDevice))
             {
-                if (ConnectedDevices != null && !ConnectedDevices.Contains(SelectedDevice))
-                {
-                    System.Diagnostics.Debug.WriteLine("Connected Sucessfully");
-                    ConnectedDevices.Add(SelectedDevice);
-                }
+                ConnectedDevices.Add(SelectedDevice);
             }
-        }
-        #endregion
-    }
+            BluetoothEndPoint endPoint = await Task.Run(() => SenderService.ConnectDevice(SelectedDevice));
+			ConnectedDevices.Remove(SelectedDevice);
+		}
+		#endregion
+	}
 }
