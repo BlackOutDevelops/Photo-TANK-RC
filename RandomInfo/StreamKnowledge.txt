@@ -1,0 +1,12 @@
+camSet2=' tcpclientsrc host=10.1.37.28 port=8554 ! gdpdepay ! rtph264depay ! h264parse ! nvv4l2decoder  ! nvvidconv flip-method='+str(flip)+' ! video/x-raw,format=BGRx ! videoconvert ! video/x-raw, width='+str(dispW)+', height='+str(dispH)+',format=BGR ! appsink  drop=true sync=false '
+
+
+CODE TO WATCH LIVE STREAM FROM MEDIA ELEMENT
+<Window x:Class="WpfApplication1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Show Broadcast" Height="350" Width="525">
+    <Grid>
+        <MediaElement Name="VideoControl" Source="http://localhost:8080" />
+    </Grid>
+</Window>
