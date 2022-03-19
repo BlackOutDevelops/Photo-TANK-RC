@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
         xmlns:local="clr-namespace:JoshsTestApp"
 		mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1000">
@@ -51,15 +52,15 @@
 			<ListView.Background>
 				<ImageBrush ImageSource="Images/Metal.jpg" Stretch="UniformToFill"/>
 			</ListView.Background>
-            <ListView.ItemTemplate>
-                <DataTemplate>
+			<ListView.ItemTemplate>
+				<DataTemplate>
 					<TextBox Text="{Binding DeviceName}" VerticalAlignment="Center" Foreground="Black" FontWeight="ExtraBold" FontSize="20" TextAlignment="Center" Background="Transparent" BorderBrush="Transparent" IsHitTestVisible="False"/>
 				</DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-		<WebBrowser Grid.Row="1" Grid.Column="1" Source="https://www.youtube-nocookie.com/embed/21X5lGlDOfg">
+			</ListView.ItemTemplate>
+		</ListView>
+		<vlc:VlcControl x:Name="NanoStream" Grid.Row="1" Grid.Column="1">
 
-		</WebBrowser>
+		</vlc:VlcControl>
 		<Rectangle Grid.Row="1" Grid.Column="2" Stroke="Black" StrokeThickness="2" RenderTransformOrigin="0.5, 0.5">
 			<Rectangle.RenderTransform>
 				<TransformGroup>
