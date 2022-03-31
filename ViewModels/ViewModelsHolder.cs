@@ -9,13 +9,11 @@ namespace JoshsTestApp
 	internal class ViewModelsHolder
 	{
         public AvailableBTDeviceViewModel AvailableBTDeviceViewModel;
-        public JetsonConnectionStatusViewModel JetsonConnectionStatusViewModel;
         public MainWindowViewModel MainWindowViewModel;
 
         public ViewModelsHolder()
         {
             AvailableBTDeviceViewModel = new AvailableBTDeviceViewModel();
-            JetsonConnectionStatusViewModel = new JetsonConnectionStatusViewModel();
             MainWindowViewModel = new MainWindowViewModel();
         }
     }
