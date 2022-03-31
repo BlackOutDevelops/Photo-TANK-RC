@@ -6,7 +6,7 @@
 		xmlns:vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
         xmlns:local="clr-namespace:JoshsTestApp"
 		mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1000">
+        Title="MainWindow" Height="800" Width="1000" SizeChanged="Window_SizeChanged" StateChanged="Window_StateChanged">
     <Window.Resources>
 		<Style x:Key="RoundedBorder" TargetType="Button">
 			<Style.Resources>
@@ -19,13 +19,13 @@
     <Grid Background="Gray">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.ColumnSpan="3">
             <Grid.Background>
@@ -42,7 +42,6 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Button Grid.RowSpan="2" Grid.Column="1" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Bluetooth Device" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler_BluetoothDevices"/>
-			<Button Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Jetson Nano Hotspot" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler_JetsonConnection"/>
             <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Left Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock Grid.Row="0" Grid.Column="3" TextAlignment="Right" Foreground="White" HorizontalAlignment="Right" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Right Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
@@ -58,7 +57,17 @@
 				</DataTemplate>
 			</ListView.ItemTemplate>
 		</ListView>
-		<vlc:VlcControl x:Name="NanoStream" Grid.Row="1" Grid.Column="1">
+        <vlc:VlcControl x:Name="NanoStream" Grid.Row="1" Grid.Column="1" MaxWidth="{Binding MaxWidthStream}" MaxHeight="{Binding MaxHeightStream}" BorderBrush="Black" BorderThickness="2">
+            <vlc:VlcControl.Style>
+                <Style TargetType="vlc:VlcControl">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding MaxHeightStream}" Value="540">
+                            <Setter Property="MinWidth" Value="940"/>
+                            <Setter Property="MinHeight" Value="530"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </vlc:VlcControl.Style>
 
 		</vlc:VlcControl>
 		<Rectangle Grid.Row="1" Grid.Column="2" Stroke="Black" StrokeThickness="2" RenderTransformOrigin="0.5, 0.5">

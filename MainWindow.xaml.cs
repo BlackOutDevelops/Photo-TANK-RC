@@ -29,16 +29,21 @@ namespace JoshsTestApp
 
 			var options = new string[]
 			{
-                // VLC options can be given here. Please refer to the VLC command line documentation.
-            };
+				"--network-caching=10",
+				"--live-caching=20",
+				"--clock-jitter=5",
+				"--input-fast-seek"
+				// VLC options can be given here. Please refer to the VLC command line documentation.
+			};
 
 			NanoStream.SourceProvider.CreatePlayer(vlcLibDirectory, options);
-
+			FileInfo fileInfo = new FileInfo(currentDirectory + "\\StreamForNano.sdp");
 			// Load libvlc libraries and initializes stuff. It is important that the options (if you want to pass any) and lib directory are given before calling this method.
-			NanoStream.SourceProvider.MediaPlayer.Play(@"rtsp://192.168.50.220:5000/test");
-			DataContext = viewModels.AvailableBTDeviceViewModel;	
+			NanoStream.SourceProvider.MediaPlayer.Play(fileInfo);
+			DataContext = viewModels.MainWindowViewModel;
+			Application.Current.MainWindow.Title = "Photo-TANK Controller";
 			Application.Current.MainWindow.WindowState = WindowState.Maximized;
-
+            Window_StateChanged(this, EventArgs.Empty);
 		}
 
 		private void OnClickHandler_BluetoothDevices(object sender, RoutedEventArgs e)
@@ -63,28 +68,38 @@ namespace JoshsTestApp
 			}
 		}
 
-		private void OnClickHandler_JetsonConnection(object sender, RoutedEventArgs e)
-		{
-			//bool isWindowOpen = false;
-			//foreach (Window w in Application.Current.Windows)
-			//{
-			//	if (w is JetsonConnectionStatus)
-			//	{
-			//		isWindowOpen = true;
-			//		w.Activate();
-			//	}
-			//}
+		//private void OnClickHandler_JetsonConnection(object sender, RoutedEventArgs e)
+		//{
+		//	//bool isWindowOpen = false;
+		//	//foreach (Window w in Application.Current.Windows)
+		//	//{
+		//	//	if (w is JetsonConnectionStatus)
+		//	//	{
+		//	//		isWindowOpen = true;
+		//	//		w.Activate();
+		//	//	}
+		//	//}
 
-			//if (!isWindowOpen)
-			//{
-			//	JetsonConnectionStatus jetsonWindow = new JetsonConnectionStatus
-			//	{
-			//		DataContext = viewModels.JetsonConnectionStatusViewModel
-			//	};
-			//	jetsonWindow.Show();
-			//}
-			//if (!viewModels.JetsonConnectionStatusViewModel.JetsonIsConnected)
-			//	viewModels.JetsonConnectionStatusViewModel.GetStream();
-		}
-	}
+		//	//if (!isWindowOpen)
+		//	//{
+		//	//	JetsonConnectionStatus jetsonWindow = new JetsonConnectionStatus
+		//	//	{
+		//	//		DataContext = viewModels.JetsonConnectionStatusViewModel
+		//	//	};
+		//	//	jetsonWindow.Show();
+		//	//}
+		//	//if (!viewModels.JetsonConnectionStatusViewModel.JetsonIsConnected)
+		//	//	viewModels.JetsonConnectionStatusViewModel.GetStream();
+		//}
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+			viewModels.MainWindowViewModel.Window_SizeChanged(sender, e);
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+			viewModels.MainWindowViewModel.Window_StateChanged(sender, e);
+        }
+    }
 }

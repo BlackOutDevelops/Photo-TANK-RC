@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace JoshsTestApp
 {
+	// PROBABLY WILL NEVER NEED
 	class JetsonConnectionStatusViewModel : BaseViewModel
 	{
   //      public bool JetsonIsConnected = false;
