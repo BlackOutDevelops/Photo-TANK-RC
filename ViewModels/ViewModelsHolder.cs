@@ -8,12 +8,12 @@ namespace JoshsTestApp
 {
 	internal class ViewModelsHolder
 	{
-        public AvailableBTDeviceViewModel AvailableBTDeviceViewModel;
+        //public AvailableBTDeviceViewModel AvailableBTDeviceViewModel;
         public MainWindowViewModel MainWindowViewModel;
 
         public ViewModelsHolder()
         {
-            AvailableBTDeviceViewModel = new AvailableBTDeviceViewModel();
+            //AvailableBTDeviceViewModel = new AvailableBTDeviceViewModel();
             MainWindowViewModel = new MainWindowViewModel();
         }
     }

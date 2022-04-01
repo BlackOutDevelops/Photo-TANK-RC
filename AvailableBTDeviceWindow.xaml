@@ -20,8 +20,8 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" FontSize="10" Margin="10 0" VerticalAlignment="Bottom" Text="Please make sure the device is in pairing mode to pair to the Photo-TANK Remote"/>
                 <Button Grid.Row="1" Command="{Binding GetDevicesCommand}" Content="Get Devices" Height="20" Width="80" HorizontalAlignment="Left" Margin="10 0"/>
-                <Button Grid.Row="1" Command="{Binding ConnectToDeviceCommand}" Content="Connect to Device" Height="20" Width="110" HorizontalAlignment="Left" Margin="100 0 10 0" IsEnabled="{qc:Binding '$P != null', P={Binding SelectedDevice}}"/>
-                <!--REMOVE WHEN NOT NEEDED--><TextBlock HorizontalAlignment="Left" Margin="661,0,0,0" TextWrapping="Wrap" Text="{Binding SelectedDevice.DeviceName}" VerticalAlignment="Center"/>
+                <Button Grid.Row="1" Command="{Binding StoreDeviceCommand}" Content="Store Device" Height="20" Width="110" HorizontalAlignment="Left" Margin="100 0 10 0" IsEnabled="{qc:Binding '$P != null', P={Binding SelectedDevice}}"/>
+                <!--REMOVE WHEN NOT NEEDED--><TextBlock HorizontalAlignment="Right" Margin="0,0,0,0" TextWrapping="Wrap" Text="{Binding SelectedDevice.DeviceName}" VerticalAlignment="Center"/>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Header="Available Bluetooth Devices" >

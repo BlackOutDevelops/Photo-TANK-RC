@@ -113,7 +113,7 @@ namespace JoshsTestApp
             _outputJoystickCoordinates = new Point(_centerOfJoystickTop.X - _centerOfJoystickBase.X, _centerOfJoystickTop.Y - _centerOfJoystickBase.Y);
             OutputJoystickCoordinateX = Math.Ceiling(_outputJoystickCoordinates.X);
             OutputJoystickCoordinateY = Math.Ceiling(_outputJoystickCoordinates.Y);
-            System.Diagnostics.Debug.WriteLine(OutputJoystickCoordinateX + ", " + OutputJoystickCoordinateY);
+            //System.Diagnostics.Debug.WriteLine(OutputJoystickCoordinateX + ", " + OutputJoystickCoordinateY);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

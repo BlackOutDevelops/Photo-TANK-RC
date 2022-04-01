@@ -39,5 +39,18 @@ namespace JoshsTestApp
                 InstalledServices = device_info.InstalledServices;
             }
         }
+
+        // TESTING
+        public Device()
+        {
+                DeviceName = "Test";
+                DeviceInfo = null;
+                IsAuthenticated = true;
+                IsRemembered = true;
+                IsConnected = true;
+                LastSeen = new DateTime();
+                LastUsed = new DateTime();
+                InstalledServices = null;
+        }
     }
 }

@@ -4,18 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
+        xmlns:qc="http://QuickConverter.CodePlex.com/"
         xmlns:local="clr-namespace:JoshsTestApp"
 		mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1000" SizeChanged="Window_SizeChanged" StateChanged="Window_StateChanged">
     <Window.Resources>
-		<Style x:Key="RoundedBorder" TargetType="Button">
-			<Style.Resources>
-				<Style TargetType="Border">
-					<Setter Property="CornerRadius" Value="15"/>
-				</Style>
-			</Style.Resources>
-		</Style>
-	</Window.Resources>
+        <Style x:Key="RoundedBorder" TargetType="Button">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
     <Grid Background="Gray">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -41,13 +42,51 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Button Grid.RowSpan="2" Grid.Column="1" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Bluetooth Device" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler_BluetoothDevices"/>
+            <!--<Button Grid.RowSpan="2" Grid.Column="1" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Center" Content="Connect to Bluetooth Device" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Click="OnClickHandler_BluetoothDevices"/>-->
             <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Left Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick1, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock Grid.Row="0" Grid.Column="3" TextAlignment="Right" Foreground="White" HorizontalAlignment="Right" Text="{Binding Path=OutputJoystickCoordinateX, StringFormat=Right Joystick&#x0d;&#x0a;X: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
             <TextBlock Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Foreground="White" Text="{Binding Path=OutputJoystickCoordinateY, StringFormat=Y: {0},ElementName=Joystick2, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" />
         </Grid>
-		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ConnectedDevices}" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsHitTestVisible="False">
+        <!--<TextBox Grid.Row="1" Grid.Column="0" DataContext="{Binding AvailableBTDeviceViewModel}" Text="{Binding StoredDevice.DeviceName}" VerticalAlignment="Center" Foreground="White" FontWeight="ExtraBold" FontSize="20" TextAlignment="Center" Background="Transparent" BorderBrush="Transparent" IsHitTestVisible="False"/>-->
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.Background>
+                <ImageBrush ImageSource="Images/Metal.jpg" Stretch="UniformToFill"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="80" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Header="Find A Bluetooth Connection" FontWeight="ExtraBold">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" FontSize="10" Margin="10 0" VerticalAlignment="Bottom" Text="Please make sure the device is in pairing mode to pair to the Photo-TANK Remote"/>
+                    <Button Grid.Row="1" Command="{Binding GetDevicesCommand}" Content="Get Devices" Height="20" Width="80" HorizontalAlignment="Left" Margin="10 0"/>
+                    <Button Grid.Row="1" Command="{Binding ConnectToDeviceCommand}" Content="Connect to Device" Height="20" Width="110" HorizontalAlignment="Left" Margin="100 0 10 0" IsEnabled="{qc:Binding '$P != null', P={Binding SelectedDevice}}"/>
+                    <Button Grid.Row="1" Command="{Binding DisconnectCommand}" Content="Disconnect From Device" Height="20" Width="150" HorizontalAlignment="Left" Margin="220 0 10 0" IsEnabled="{qc:Binding '$P != null', P={Binding SelectedDevice}}"/>
+                    <!--REMOVE WHEN NOT NEEDED-->
+                    <TextBlock HorizontalAlignment="Right" Margin="0,0,0,0" TextWrapping="Wrap" Text="{Binding SelectedDevice.DeviceName}" VerticalAlignment="Center"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Header="Available Bluetooth Devices" FontWeight="ExtraBold">
+                <ListView ItemsSource="{Binding BluetoothDevices}" SelectedItem="{Binding SelectedDevice}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Device Name" Width="Auto" DisplayMemberBinding="{Binding DeviceName}" />
+                            <GridViewColumn Header="Authenticated" Width="Auto" DisplayMemberBinding="{Binding IsAuthenticated}"/>
+                            <GridViewColumn Header="Remembered" Width="Auto" DisplayMemberBinding="{Binding IsRemembered}" />
+                            <GridViewColumn Header="Connected" Width="Auto" DisplayMemberBinding="{Binding IsConnected}" />
+                            <GridViewColumn Header="Last Seen" Width="Auto" DisplayMemberBinding="{Binding LastSeen}" />
+                            <GridViewColumn Header="Last Used" Width="Auto" DisplayMemberBinding="{Binding LastUsed}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+        </Grid>
+        <!--<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding StoredDevice}" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsHitTestVisible="False">
 			<ListView.Background>
 				<ImageBrush ImageSource="Images/Metal.jpg" Stretch="UniformToFill"/>
 			</ListView.Background>
@@ -56,7 +95,7 @@
 					<TextBox Text="{Binding DeviceName}" VerticalAlignment="Center" Foreground="Black" FontWeight="ExtraBold" FontSize="20" TextAlignment="Center" Background="Transparent" BorderBrush="Transparent" IsHitTestVisible="False"/>
 				</DataTemplate>
 			</ListView.ItemTemplate>
-		</ListView>
+		</ListView>-->
         <vlc:VlcControl x:Name="NanoStream" Grid.Row="1" Grid.Column="1" MaxWidth="{Binding MaxWidthStream}" MaxHeight="{Binding MaxHeightStream}" BorderBrush="Black" BorderThickness="2">
             <vlc:VlcControl.Style>
                 <Style TargetType="vlc:VlcControl">
@@ -68,10 +107,9 @@
                     </Style.Triggers>
                 </Style>
             </vlc:VlcControl.Style>
-
-		</vlc:VlcControl>
-		<Rectangle Grid.Row="1" Grid.Column="2" Stroke="Black" StrokeThickness="2" RenderTransformOrigin="0.5, 0.5">
-			<Rectangle.RenderTransform>
+        </vlc:VlcControl>
+        <Rectangle Grid.Row="1" Grid.Column="2" Stroke="Black" StrokeThickness="2" RenderTransformOrigin="0.5, 0.5">
+            <Rectangle.RenderTransform>
 				<TransformGroup>
 					<ScaleTransform ScaleX="-1"/>
 				</TransformGroup>
@@ -80,7 +118,8 @@
 				<ImageBrush ImageSource="Images/Metal.jpg" Stretch="UniformToFill"  />
 			</Rectangle.Fill>
 		</Rectangle>
-
+        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ConnectedDevice.DeviceName, StringFormat=Data being sent/received via {0}}" VerticalAlignment="Top" Foreground="White" FontWeight="ExtraBold" FontSize="20" TextAlignment="Center" Background="Transparent" BorderBrush="Transparent" IsHitTestVisible="False"/>
+        
         <Grid Grid.Row="2" Grid.ColumnSpan="3">
             <Grid.Background>
                 <ImageBrush ImageSource="Images/DiamondPlateMetal.jpg" Stretch="UniformToFill"/>
@@ -89,7 +128,7 @@
                 <RowDefinition Height="80"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Right" Content="FIRE" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Margin="80 0"/>
+            <Button Grid.Row="0" Style="{StaticResource RoundedBorder}" Background="DarkGray" HorizontalAlignment="Right" Content="FIRE" BorderThickness="3" BorderBrush="Black" Height="50" Width="200" Margin="80 0" Click="FireButtonClicked"/>
             <local:Joystick Grid.Row="1" x:Name="Joystick1" HorizontalAlignment="Left" Margin="80 0 80 40"/>
             <local:Joystick Grid.Row="1" x:Name="Joystick2" HorizontalAlignment="Right" Margin="80 0 80 40"/>
         </Grid>

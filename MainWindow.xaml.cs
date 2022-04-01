@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -44,52 +45,30 @@ namespace JoshsTestApp
 			Application.Current.MainWindow.Title = "Photo-TANK Controller";
 			Application.Current.MainWindow.WindowState = WindowState.Maximized;
             Window_StateChanged(this, EventArgs.Empty);
+			Joystick1.PropertyChanged += Joystick1_PropertyChanged;
+			Joystick2.PropertyChanged += Joystick2_PropertyChanged;
 		}
 
-		private void OnClickHandler_BluetoothDevices(object sender, RoutedEventArgs e)
-		{
-			bool isWindowOpen = false;
-			foreach (Window w in Application.Current.Windows)
-			{
-				if (w is AvailableBTDeviceWindow)
-				{
-					isWindowOpen = true;
-					w.Activate();
-				}
-			}
-
-			if (!isWindowOpen)
-			{
-				AvailableBTDeviceWindow bluetoothWindow = new AvailableBTDeviceWindow
-				{
-					DataContext = viewModels.AvailableBTDeviceViewModel
-				};
-				bluetoothWindow.Show();
-			}
-		}
-
-		//private void OnClickHandler_JetsonConnection(object sender, RoutedEventArgs e)
+		//private void OnClickHandler_BluetoothDevices(object sender, RoutedEventArgs e)
 		//{
-		//	//bool isWindowOpen = false;
-		//	//foreach (Window w in Application.Current.Windows)
-		//	//{
-		//	//	if (w is JetsonConnectionStatus)
-		//	//	{
-		//	//		isWindowOpen = true;
-		//	//		w.Activate();
-		//	//	}
-		//	//}
+		//	bool isWindowOpen = false;
+		//	foreach (Window w in Application.Current.Windows)
+		//	{
+		//		if (w is AvailableBTDeviceWindow)
+		//		{
+		//			isWindowOpen = true;
+		//			w.Activate();
+		//		}
+		//	}
 
-		//	//if (!isWindowOpen)
-		//	//{
-		//	//	JetsonConnectionStatus jetsonWindow = new JetsonConnectionStatus
-		//	//	{
-		//	//		DataContext = viewModels.JetsonConnectionStatusViewModel
-		//	//	};
-		//	//	jetsonWindow.Show();
-		//	//}
-		//	//if (!viewModels.JetsonConnectionStatusViewModel.JetsonIsConnected)
-		//	//	viewModels.JetsonConnectionStatusViewModel.GetStream();
+		//	if (!isWindowOpen)
+		//	{
+		//		AvailableBTDeviceWindow bluetoothWindow = new AvailableBTDeviceWindow
+		//		{
+		//			DataContext = viewModels.AvailableBTDeviceViewModel
+		//		};
+		//		bluetoothWindow.Show();
+		//	}
 		//}
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -100,6 +79,21 @@ namespace JoshsTestApp
         private void Window_StateChanged(object sender, EventArgs e)
         {
 			viewModels.MainWindowViewModel.Window_StateChanged(sender, e);
+        }
+
+		private void Joystick1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+			viewModels.MainWindowViewModel.Joystick1_PropertyChanged(sender, e);
+        }
+
+		private void Joystick2_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			viewModels.MainWindowViewModel.Joystick2_PropertyChanged(sender, e);
+		}
+
+        private void FireButtonClicked(object sender, RoutedEventArgs e)
+        {
+			viewModels.MainWindowViewModel.FireButtonClicked(sender, e);
         }
     }
 }

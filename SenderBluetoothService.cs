@@ -4,6 +4,7 @@ using InTheHand.Net.Sockets;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -14,9 +15,27 @@ using System.Windows;
 
 namespace JoshsTestApp
 {
-    class SenderBluetoothService
+    class SenderBluetoothService : INotifyPropertyChanged
     {
+        private BluetoothClient Client;
         private readonly Guid _serviceClassId;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private Device _connectedDevice;
+        public Device ConnectedDevice
+        {
+            get { return _connectedDevice; }
+            set
+            {
+                if (value != _connectedDevice)
+                {
+                    _connectedDevice = value;
+                    FirePropertyChanged(nameof(ConnectedDevice));
+                }
+            }
+        }
+
         public SenderBluetoothService()
         {
             _serviceClassId = new Guid("00000000-0000-0000-0000-000000000000");
@@ -39,36 +58,102 @@ namespace JoshsTestApp
                 }
                 return devices;
             });
-            System.Diagnostics.Debug.WriteLine("Here");
             return await task;
         }
 
-        public async Task<BluetoothEndPoint> ConnectDevice(Device pendingDevice)
+        public async Task ConnectToDevice(Device pendingDevice)
         {
-            var task = Task.Run(() =>
+            bool isPrinted = false;
+            await Task.Run(() =>
             {
-                using (BluetoothClient client = new BluetoothClient())
-                {
                     try
                     {
-                        BluetoothEndPoint endpoint = new BluetoothEndPoint(pendingDevice.DeviceInfo.DeviceAddress, BluetoothService.PhonebookAccess);
+                        if (Client == null)
+                            Client = new BluetoothClient();
+
+                        BluetoothEndPoint endpoint = new BluetoothEndPoint(pendingDevice.DeviceInfo.DeviceAddress, BluetoothService.SerialPort);
+
+                        Client.ConnectAsync(endpoint);
                         
-                        client.ConnectAsync(endpoint);
-                        System.Diagnostics.Debug.WriteLine("Connected Sucessfully");
-                        while (client.Connected)
+                        while (Client.Connected)
                         {
-                            
+                            if (!isPrinted)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Connected");
+                                System.Diagnostics.Debug.Flush();
+                                ConnectedDevice = pendingDevice;
+                                isPrinted = true;
+                            }
                         }
-                        return endpoint;
                     }
                     catch (Exception ex)
                     {
+                        Client.Close();
                         System.Diagnostics.Debug.WriteLine(ex.HelpLink);
-                        return null;
                     }
-                }
             });
-            return await task;
         }
+
+        public async Task SendToDevice(String data)
+        {
+            await Task.Run(() =>
+            {
+                var stream = Client.GetStream();
+                var buffer = Encoding.ASCII.GetBytes(data);
+                System.Diagnostics.Debug.WriteLine("Stream is: " + data);
+                stream.WriteAsync(buffer);
+                stream.FlushAsync();
+            });
+        }
+
+        public async Task Disconnect()
+        {
+            await Task.Run(() =>
+            {
+                Client.Close();
+                Client = null;
+                System.Diagnostics.Debug.WriteLine("Disconnecting from " + ConnectedDevice.DeviceName);
+                ConnectedDevice = null;
+            });
+        }
+
+        public void FirePropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        //public async Task ConnectToDevice(Device pendingDevice)
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        using (BluetoothClient client = new BluetoothClient())
+        //        {
+        //            try
+        //            {
+        //                BluetoothEndPoint endpoint = new BluetoothEndPoint(pendingDevice.DeviceInfo.DeviceAddress, BluetoothService.SerialPort);
+
+        //                client.ConnectAsync(endpoint);
+        //                var stream = client.GetStream();
+        //                System.Diagnostics.Debug.WriteLine(data);
+        //                while (client.Connected)
+        //                {
+        //                    if (stream != null)
+        //                    {
+        //                        var buffer = System.Text.Encoding.ASCII.GetBytes(data);
+        //                        stream.Write(buffer);
+        //                        stream.Flush();
+        //                        stream.Close();
+        //                        client.Close();
+        //                    }
+        //                }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                client.Close();
+        //                System.Diagnostics.Debug.WriteLine(ex.HelpLink);
+        //            }
+        //        }
+        //    });
+        //}
     }
 }

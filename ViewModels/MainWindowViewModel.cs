@@ -8,11 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using InTheHand.Net;
+using JoshTestApp;
 
 namespace JoshsTestApp
 {
     class MainWindowViewModel: BaseViewModel
     {
+        public SenderBluetoothService SenderService = new SenderBluetoothService();
+        private string DataToSend = "1";
+
         private double _maxWidthStream;
         public double MaxWidthStream
         {
@@ -41,10 +47,67 @@ namespace JoshsTestApp
             }
         }
 
+        private Task<ObservableCollection<Device>> _bluetoothDevicesTasks;
+        public Task<ObservableCollection<Device>> BluetoothDevicesTasks
+        {
+            get { return _bluetoothDevicesTasks; }
+            set
+            {
+                if (value != _bluetoothDevicesTasks)
+                {
+                    _bluetoothDevicesTasks = value;
+                    FirePropertyChanged(nameof(BluetoothDevicesTasks));
+                }
+            }
+        }
+
+        private Device _selectedDevice;
+        public Device SelectedDevice
+        {
+            get { return _selectedDevice; }
+            set
+            {
+                if (value != _selectedDevice)
+                {
+                    _selectedDevice = value;
+                    FirePropertyChanged(nameof(SelectedDevice));
+                }
+            }
+        }
+
+        private ObservableCollection<Device> _bluetoothDevices;
+        public ObservableCollection<Device> BluetoothDevices
+        {
+            get { return _bluetoothDevices; }
+            set
+            {
+                if (value != _bluetoothDevices)
+                {
+                    _bluetoothDevices = value;
+                    FirePropertyChanged(nameof(BluetoothDevices));
+                }
+            }
+        }
+
+        private Device _connectedDevice;
+        public Device ConnectedDevice
+        {
+            get { return _connectedDevice; }
+            set
+            {
+                if (value != _connectedDevice)
+                {
+                    _connectedDevice = value;
+                    FirePropertyChanged(nameof(ConnectedDevice));
+                }
+            }
+        }
         public MainWindowViewModel()
         {
+            BluetoothDevices = new ObservableCollection<Device>();
             MaxWidthStream = 960;
             MaxHeightStream = 540;
+            SenderService.PropertyChanged += SenderService_PropertyChanged;
         }
 
         public void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -89,5 +152,93 @@ namespace JoshsTestApp
             else
                 return multiple;
         }
+
+        public void Joystick1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var joy1 = sender as Joystick;
+            if (e.PropertyName == nameof(joy1.OutputJoystickCoordinateX) || e.PropertyName == nameof(joy1.OutputJoystickCoordinateY))
+            {
+                //System.Diagnostics.Debug.WriteLine("Left Joystick");
+            }
+        }
+
+        public void Joystick2_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var joy2 = sender as Joystick;
+            if (e.PropertyName == nameof(joy2.OutputJoystickCoordinateX) || e.PropertyName == nameof(joy2.OutputJoystickCoordinateY))
+            {
+                //System.Diagnostics.Debug.WriteLine("Right Joystick");
+            }
+        }
+
+        public void FireButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (DataToSend.Equals("1"))
+            {
+                SendToDevice(DataToSend);
+                DataToSend = DataToSend.Replace('1', '2');
+            }
+            else if (DataToSend.Equals("2"))
+            {
+                SendToDevice(DataToSend);
+                DataToSend = DataToSend.Replace('2', '1');
+            }
+        }
+
+        private void SenderService_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SenderService.ConnectedDevice))
+            {
+                ConnectedDevice = SenderService.ConnectedDevice;
+            }
+        }
+
+        #region Commands
+        private ICommand _getDevicesCommand;
+        public ICommand GetDevicesCommand => _getDevicesCommand ??= new CommandHandler((a) => GetDevices(), () => true);
+        private ICommand _connectToDeviceCommand;
+        public ICommand ConnectToDeviceCommand => _connectToDeviceCommand ??= new CommandHandler((a) => ConnectToDevice(), () => true);
+        private ICommand _DisconnectCommand;
+        public ICommand DisconnectCommand => _DisconnectCommand ??= new CommandHandler((a) => DisconnectFromDevice(), () => true);
+
+        public async void GetDevices()
+        {
+            ObservableCollection<Device> temp = await Task.Run(() => BluetoothDevicesTasks = SenderService.GetDevices());
+
+            BluetoothDevices.Clear();
+            foreach (Device pendingDevice in temp)
+            {
+                BluetoothDevices.Add(pendingDevice);
+            }
+        }
+
+        //private void StoreDevice()
+        //{
+        //    if (StoredDevice != null && !StoredDevice.Equals(SelectedDevice))
+        //    {
+        //        StoredDevice = SelectedDevice;
+        //        System.Diagnostics.Debug.WriteLine("Exists");
+        //    }
+        //    else
+        //    {
+        //        StoredDevice = new Device(SelectedDevice.DeviceInfo);
+        //        System.Diagnostics.Debug.WriteLine("Doesn't Exist");
+        //    }
+        //}
+
+        private async void SendToDevice(String data)
+        {
+            await Task.Run(() => SenderService.SendToDevice(data));
+        }
+        private async void ConnectToDevice()
+        {
+            await Task.Run(() => SenderService.ConnectToDevice(SelectedDevice));
+        }
+        
+        private async void DisconnectFromDevice()
+        {
+            await Task.Run(() => SenderService.Disconnect());
+        }
+        #endregion
     }
 }
