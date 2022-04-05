@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +17,8 @@ namespace JoshsTestApp
     class MainWindowViewModel: BaseViewModel
     {
         public SenderBluetoothService SenderService = new SenderBluetoothService();
-        private string DataToSend = "1";
+        private string DataToSend = null;
+        private string PreviousData = null;
 
         private double _maxWidthStream;
         public double MaxWidthStream
@@ -158,7 +159,46 @@ namespace JoshsTestApp
             var joy1 = sender as Joystick;
             if (e.PropertyName == nameof(joy1.OutputJoystickCoordinateX) || e.PropertyName == nameof(joy1.OutputJoystickCoordinateY))
             {
-                //System.Diagnostics.Debug.WriteLine("Left Joystick");
+                double angle = CalculateAngle(new Point(joy1.OutputJoystickCoordinateX, joy1.OutputJoystickCoordinateY));
+                switch (angle)
+                {
+                    case >= 337.5 and <= 360:
+                        DataToSend = "1";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 0 and < 22.5:
+                        DataToSend = "1";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 22.5 and < 67.5:
+                        DataToSend = "2";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 67.5 and < 112.5:
+                        DataToSend = "3";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 112.5 and < 157.5:
+                        DataToSend = "4";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 157.5 and < 202.5:
+                        DataToSend = "5";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 202.5 and < 247.5:
+                        DataToSend = "6";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 247.5 and < 292.5:
+                        DataToSend = "7";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 292.5 and < 337.5:
+                        DataToSend = "8";
+                        SendToDevice(DataToSend);
+                        break;
+                }
             }
         }
 
@@ -167,8 +207,29 @@ namespace JoshsTestApp
             var joy2 = sender as Joystick;
             if (e.PropertyName == nameof(joy2.OutputJoystickCoordinateX) || e.PropertyName == nameof(joy2.OutputJoystickCoordinateY))
             {
-                //System.Diagnostics.Debug.WriteLine("Right Joystick");
+                double angle = CalculateAngle(new Point(joy2.OutputJoystickCoordinateX, joy2.OutputJoystickCoordinateY));
+                System.Diagnostics.Debug.WriteLine(angle);
             }
+        }
+
+        public void Joystick1_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            DataToSend = "0";
+            Thread.Sleep(100);
+            SendToDevice(DataToSend);
+        }
+
+        private double CalculateAngle(Point coordinates)
+        {
+            double xRadians = coordinates.X * (Math.PI / 180);
+            double yRadians = coordinates.Y * (Math.PI / 180);
+            double radians = Math.Atan2(xRadians, yRadians);
+            double angle = radians * (180 / Math.PI);
+            
+            if (angle < 0)
+                angle += 360;
+
+            return angle;
         }
 
         public void FireButtonClicked(object sender, RoutedEventArgs e)
@@ -226,9 +287,20 @@ namespace JoshsTestApp
         //    }
         //}
 
-        private async void SendToDevice(String data)
+        private void SendToDevice(String data)
         {
-            await Task.Run(() => SenderService.SendToDevice(data));
+            if (PreviousData != DataToSend)
+                _ = Task.Run(() => SenderService.SendToDevice(data));
+            
+            if (PreviousData == null)
+                PreviousData = DataToSend;
+            else
+            {
+                PreviousData = String.Empty;
+                PreviousData = DataToSend;
+            }
+
+            DataToSend = String.Empty;
         }
         private async void ConnectToDevice()
         {

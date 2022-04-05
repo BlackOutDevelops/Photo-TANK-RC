@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Canvas Name="JoystickCanvas" Background="Transparent" MouseMove="HandleMouseMove" MouseUp="HandleMouseUp" Height="200" Width="200" HorizontalAlignment="Center">
-        <Ellipse Name="JoystickBase" Height="170" Stroke="Black" Fill="DarkGray" Width="170" Canvas.Left="15" Canvas.Top="15"/>
-        <Ellipse Name="JoystickTop" Height="120" Stroke="Black" Fill="Gray" Width="120" Canvas.Left="40" Canvas.Top="40" MouseDown="HandleEllipseMouseDown"/>
+        <Ellipse Name="JoystickBase" Height="176" Stroke="Black" Fill="DarkGray" Width="176" Canvas.Left="15" Canvas.Top="15"/>
+        <Ellipse Name="JoystickTop" Height="120" Stroke="Black" Fill="Gray" Width="120" Canvas.Left="43" Canvas.Top="43" MouseDown="HandleEllipseMouseDown" HorizontalAlignment="Left" VerticalAlignment="Center"/>
     </Canvas>
 </UserControl>

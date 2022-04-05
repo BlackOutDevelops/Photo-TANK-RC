@@ -110,7 +110,7 @@ namespace JoshsTestApp
         {
             _centerOfJoystickTop = new(Canvas.GetLeft(JoystickTop) + JoystickTop.Width / 2, Canvas.GetTop(JoystickTop) + JoystickTop.Height / 2);
             _centerOfJoystickBase = new(Canvas.GetLeft(JoystickBase) + JoystickBase.Width / 2, Canvas.GetTop(JoystickBase) + JoystickBase.Height / 2);
-            _outputJoystickCoordinates = new Point(_centerOfJoystickTop.X - _centerOfJoystickBase.X, _centerOfJoystickTop.Y - _centerOfJoystickBase.Y);
+            _outputJoystickCoordinates = new Point(_centerOfJoystickTop.X - _centerOfJoystickBase.X, _centerOfJoystickBase.Y - _centerOfJoystickTop.Y);
             OutputJoystickCoordinateX = Math.Ceiling(_outputJoystickCoordinates.X);
             OutputJoystickCoordinateY = Math.Ceiling(_outputJoystickCoordinates.Y);
             //System.Diagnostics.Debug.WriteLine(OutputJoystickCoordinateX + ", " + OutputJoystickCoordinateY);

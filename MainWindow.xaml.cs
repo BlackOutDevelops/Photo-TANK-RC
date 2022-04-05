@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace JoshsTestApp
 {
@@ -47,6 +48,7 @@ namespace JoshsTestApp
             Window_StateChanged(this, EventArgs.Empty);
 			Joystick1.PropertyChanged += Joystick1_PropertyChanged;
 			Joystick2.PropertyChanged += Joystick2_PropertyChanged;
+			Joystick1.MouseUp += Joystick1_MouseUp;
 		}
 
 		//private void OnClickHandler_BluetoothDevices(object sender, RoutedEventArgs e)
@@ -91,7 +93,12 @@ namespace JoshsTestApp
 			viewModels.MainWindowViewModel.Joystick2_PropertyChanged(sender, e);
 		}
 
-        private void FireButtonClicked(object sender, RoutedEventArgs e)
+		private void Joystick1_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+			viewModels.MainWindowViewModel.Joystick1_MouseUp(sender, e);
+		}
+
+		private void FireButtonClicked(object sender, RoutedEventArgs e)
         {
 			viewModels.MainWindowViewModel.FireButtonClicked(sender, e);
         }
