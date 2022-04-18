@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -17,6 +18,7 @@ namespace JoshsTestApp
 {
     class SenderBluetoothService : INotifyPropertyChanged
     {
+        private BluetoothListener Listener;
         private BluetoothClient Client;
         private readonly Guid _serviceClassId;
 
@@ -32,6 +34,20 @@ namespace JoshsTestApp
                 {
                     _connectedDevice = value;
                     FirePropertyChanged(nameof(ConnectedDevice));
+                }
+            }
+        }
+
+        private string _receivedString;
+        public string ReceivedString
+        {
+            get { return _receivedString; }
+            set
+            {
+                if (value != _receivedString)
+                {
+                    _receivedString = value;
+                    FirePropertyChanged(nameof(ReceivedString));
                 }
             }
         }
@@ -74,7 +90,7 @@ namespace JoshsTestApp
                         BluetoothEndPoint endpoint = new BluetoothEndPoint(pendingDevice.DeviceInfo.DeviceAddress, BluetoothService.SerialPort);
 
                         Client.ConnectAsync(endpoint);
-                        
+                        _ = StartReceiveFromDevice();
                         while (Client.Connected)
                         {
                             if (!isPrinted)
@@ -103,6 +119,27 @@ namespace JoshsTestApp
                 System.Diagnostics.Debug.WriteLine("Stream is: " + data);
                 stream.WriteAsync(buffer);
                 stream.FlushAsync();
+            });
+        }
+
+        public async Task StartReceiveFromDevice()
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    while (Client.Connected)
+                    {
+                        var stream = Client.GetStream();
+                        byte[] received = new byte[1024];
+                        stream.Read(received, 0, received.Length);
+                        ReceivedString = Encoding.ASCII.GetString(received);
+                    }
+                }
+                catch (IOException ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.HelpLink);
+                }
             });
         }
 

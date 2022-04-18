@@ -76,6 +76,34 @@ namespace JoshsTestApp
             }
         }
 
+        private StringBuilder _receivedStrings;
+        public StringBuilder ReceivedStrings
+        {
+            get { return _receivedStrings; }
+            set
+            {
+                if (value != _receivedStrings)
+                {
+                    _receivedStrings = value;
+                    FirePropertyChanged(nameof(ReceivedStrings));
+                }
+            }
+        }
+
+        private string _receivedString;
+        public string ReceivedString
+        {
+            get { return _receivedStrings.ToString(); }
+            set
+            {
+                if (value != _receivedString)
+                {
+                    _receivedString = value;
+                    FirePropertyChanged(nameof(ReceivedStrings));
+                }
+            }
+        }
+
         private ObservableCollection<Device> _bluetoothDevices;
         public ObservableCollection<Device> BluetoothDevices
         {
@@ -106,6 +134,7 @@ namespace JoshsTestApp
         public MainWindowViewModel()
         {
             BluetoothDevices = new ObservableCollection<Device>();
+            ReceivedStrings = new StringBuilder();
             MaxWidthStream = 960;
             MaxHeightStream = 540;
             SenderService.PropertyChanged += SenderService_PropertyChanged;
@@ -208,13 +237,42 @@ namespace JoshsTestApp
             if (e.PropertyName == nameof(joy2.OutputJoystickCoordinateX) || e.PropertyName == nameof(joy2.OutputJoystickCoordinateY))
             {
                 double angle = CalculateAngle(new Point(joy2.OutputJoystickCoordinateX, joy2.OutputJoystickCoordinateY));
-                System.Diagnostics.Debug.WriteLine(angle);
+                switch (angle)
+                {
+                    case >= 315 and <= 360:
+                        DataToSend = "D";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 0 and < 45:
+                        DataToSend = "D";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 45 and < 135:
+                        DataToSend = "B";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 135 and < 225:
+                        DataToSend = "E";
+                        SendToDevice(DataToSend);
+                        break;
+                    case >= 225 and < 315:
+                        DataToSend = "A";
+                        SendToDevice(DataToSend);
+                        break;
+                }
             }
         }
 
         public void Joystick1_MouseUp(object sender, MouseButtonEventArgs e)
         {
             DataToSend = "0";
+            Thread.Sleep(100);
+            SendToDevice(DataToSend);
+        }
+
+        public void Joystick2_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            DataToSend = "9C";
             Thread.Sleep(100);
             SendToDevice(DataToSend);
         }
@@ -251,6 +309,11 @@ namespace JoshsTestApp
             if (e.PropertyName == nameof(SenderService.ConnectedDevice))
             {
                 ConnectedDevice = SenderService.ConnectedDevice;
+            }
+            if (e.PropertyName == nameof(SenderService.ReceivedString))
+            {
+                if (SenderService.ReceivedString != null)
+                    ReceivedStrings.Append(SenderService.ReceivedString);
             }
         }
 

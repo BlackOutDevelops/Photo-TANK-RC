@@ -31,10 +31,10 @@ namespace JoshsTestApp
 
 			var options = new string[]
 			{
-				"--network-caching=10",
-				"--live-caching=20",
-				"--clock-jitter=5",
-				"--input-fast-seek"
+                "--network-caching=210",
+                "--live-caching=50",
+                "--clock-jitter=10",
+                "--input-fast-seek"
 				// VLC options can be given here. Please refer to the VLC command line documentation.
 			};
 
@@ -49,6 +49,7 @@ namespace JoshsTestApp
 			Joystick1.PropertyChanged += Joystick1_PropertyChanged;
 			Joystick2.PropertyChanged += Joystick2_PropertyChanged;
 			Joystick1.MouseUp += Joystick1_MouseUp;
+			Joystick2.MouseUp += Joystick2_MouseUp;
 		}
 
 		//private void OnClickHandler_BluetoothDevices(object sender, RoutedEventArgs e)
@@ -96,6 +97,11 @@ namespace JoshsTestApp
 		private void Joystick1_MouseUp(object sender, MouseButtonEventArgs e)
         {
 			viewModels.MainWindowViewModel.Joystick1_MouseUp(sender, e);
+		}
+
+		private void Joystick2_MouseUp(object sender, MouseButtonEventArgs e)
+		{
+			viewModels.MainWindowViewModel.Joystick2_MouseUp(sender, e);
 		}
 
 		private void FireButtonClicked(object sender, RoutedEventArgs e)

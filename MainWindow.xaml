@@ -119,7 +119,8 @@
 			</Rectangle.Fill>
 		</Rectangle>
         <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ConnectedDevice.DeviceName, StringFormat=Data being sent/received via {0}}" VerticalAlignment="Top" Foreground="White" FontWeight="ExtraBold" FontSize="20" TextAlignment="Center" Background="Transparent" BorderBrush="Transparent" IsHitTestVisible="False"/>
-        
+        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ReceivedString}" VerticalAlignment="Top" Foreground="White" FontWeight="ExtraBold" FontSize="16" TextAlignment="Center" Background="Transparent" BorderBrush="Transparent" IsHitTestVisible="False" />
+
         <Grid Grid.Row="2" Grid.ColumnSpan="3">
             <Grid.Background>
                 <ImageBrush ImageSource="Images/DiamondPlateMetal.jpg" Stretch="UniformToFill"/>
